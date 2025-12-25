@@ -36,3 +36,19 @@
 
 **Data Processing**
 - Dual-engine support with **Pandas** and **Polars**
+
+### Desktop Layer 
+![Desktop layer](docs/DESKTOP.jpg)
+
+**Electron**
+- Cross-platform wrapper
+
+**Main Process**
+- Window Management
+- Python Process Control
+- System Integration
+- No-Code Control
+
+**Local Storage**
+- electron-store
+
