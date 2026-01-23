@@ -65,7 +65,7 @@ def encode_columns(df: pd.DataFrame, columns : list[str] | None = None, types : 
     if columns is not None:
         chosen_columns = columns
     else:
-        chosen_columns = get_columns_by_types(df, types).columns
+        chosen_columns = get_columns_by_type(df, types).columns
 
     encoders = {}
     object_df = pd.DataFrame(index=df.index)
