@@ -34,6 +34,7 @@ def fill_na(df: pd.DataFrame, approach: str = 'mean', **args) -> pd.DataFrame:
     
 
     column = args.get('column')
+    # value_as_nan = args.get('value_as_nan')
     if column is not None and column not in df.columns:
         raise KeyError(f"Column '{column}' does not exist in DataFrame.")
     
@@ -95,12 +96,12 @@ def fill_na_knn(df:pd.DataFrame, column: str | None = None, n_neighbors : int = 
     
     df_filled = df.copy()
     df_numerical = df_filled.select_dtypes(include=['int64', 'float64'])
-    if df_numerical.empty or df_numerical.shape[1] == 0:
-
+    if (df_numerical.empty or df_numerical.shape[1] == 0) or (column and column not in df_numerical.columns):
         raise ValueError("No numerical columns available for KNN imputation.")
     
     imputer = KNNImputer(n_neighbors=n_neighbors)
     df_array = imputer.fit_transform(df_numerical)
+    
     
     df_imputed = pd.DataFrame(df_array, index=df_numerical.index, columns=df_numerical.columns)
     if column:
