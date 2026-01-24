@@ -15,7 +15,7 @@ def fill_na(df: pd.DataFrame, approach: str = 'mean', **args) -> pd.DataFrame:
     approach : {'knn', 'hist'}, default='mean'
         An approach that will be used to fill in missing values. Possible values:
         - 'knn' -> Completing missing values using k-Nearest Neighbors
-        - 'mean' -> Compleating missing values using column's mean
+        - 'mean' -> Completing missing values using column's mean
     column : str
         Only write if there is a need to fill a specific column.
     n_neighbors : int, default=5
