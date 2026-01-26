@@ -2,8 +2,33 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import numpy as np
 
+def get_columns_with_missing_values(
+        df : pd.DataFrame, 
+        column_types : str | list[str] | None = None
+    ) -> pd.DataFrame:
+    """
+    Return a DataFrame containing only columns with missing values, optionally filtered by data types.
 
-def get_columns_by_type(df : pd.DataFrame, types : list, exclude : bool = False) -> pd.DataFrame:
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The DataFrame containing the data.
+    column_types: str | list[str] | None, default=None
+        The specific column_types needed to be included.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame subset containing only the columns with missing values (and matching the specified types, if any).
+    """
+    missing_cols = df.columns[df.isnull().any()]
+    if column_types is not None:
+        return df[missing_cols].select_dtypes(include=column_types) # type: ignore
+    else:
+        return df[missing_cols]
+    
+
+def get_columns_by_type(df : pd.DataFrame, types : list[str], exclude : bool = False) -> pd.DataFrame:
     """
     Gets columns by provided types.
 
@@ -31,13 +56,19 @@ def get_columns_by_type(df : pd.DataFrame, types : list, exclude : bool = False)
     * To select Pandas datetimetz dtypes, use ``'datetimetz'`` or ``'datetime64[ns, tz]'``
     """
     if exclude:
-        chosen_columns = df.copy().select_dtypes(exclude=types)
+        chosen_columns = df.copy().select_dtypes(exclude=types) # type: ignore
     else:
-        chosen_columns = df.copy().select_dtypes(include=types)
+        chosen_columns = df.copy().select_dtypes(include=types) # type: ignore
     return chosen_columns
 
 
-def encode_columns(df: pd.DataFrame, columns : list[str] | None = None, types : list[str] = ['category'], encode_null : bool = False, embedded : bool = False) -> dict:
+def encode_columns(
+        df : pd.DataFrame, 
+        columns : list[str]|None = None, 
+        types : list[str] = ['category'], 
+        encode_null : bool = False, 
+        embedded : bool = False
+    ) -> dict:
     """
     Gets encoded columns with encoders.
 
@@ -79,7 +110,7 @@ def encode_columns(df: pd.DataFrame, columns : list[str] | None = None, types : 
 
         encoder = LabelEncoder()
         encoder.fit(series.dropna())
-        encoders[column] = encoder
+        encoders[column+'_encoded'] = encoder
         encoded = series.map(lambda x: encoder.transform([x])[0] if pd.notnull(x) else np.nan) # type: ignore
 
         if embedded:
